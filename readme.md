@@ -1,4 +1,4 @@
-# rvSimulator
+# R.V. Simulator
 
 Project under development using the reference of an object captured on the camera to make movements within the game.
 
@@ -9,6 +9,10 @@ Projeto em desenvolvimento utilizando a referência de um objeto capturado na c�
 Project uses node js, but basically all programmed part was in client js, therefore, the programming files are inside the public.
 
 Projeto utiliza node js, mas basicamente toda parte programada foi em js do client, portanto, os arquivos da programação estão dentro do public.
+
+## Content
+
+![alt text](https://github.com/danielborbavareladossantos/rvSimulator/blob/master/docs/demonstration.gif?raw=true)
 
 ## Credits
 
