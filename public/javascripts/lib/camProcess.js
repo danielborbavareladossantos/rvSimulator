@@ -92,11 +92,87 @@ class CamProcess {
             // context.fillText(angulo.toString(), x1-25, y1);
 
             build.game.angle = angulo;
+            
+            const margem = 25;
+            const estados = {x1: x1, y1: y1, x2: x2, y2: y2, angulo: angulo};
+            Control.getEstados().innerHTML = JSON.stringify(estados);
+
+            if (angulo < -0.60 && angulo > -0.80 && (Control.getDescricao().innerHTML.length == 0)) {
+                CamProcess.calibrando();
+            }
+
+            // faz verificação de posicao
+            if (Control.getInferiorDireito().innerHTML.length > 0) {
+                const eCentro = JSON.parse(Control.getCentro().innerHTML);
+                const eSuperiorEsquerdo = JSON.parse(Control.getSuperiorEsquerdo().innerHTML);
+                const eSuperiorDireito = JSON.parse(Control.getSuperiorDireito().innerHTML);
+                const eInferiorEsquerdo = JSON.parse(Control.getInferiorEsquerdo().innerHTML);
+                const eInferiorDireito = JSON.parse(Control.getInferiorDireito().innerHTML);
+                
+                CamProcess.colori(estados, eCentro, Control.getCentroLabel(), margem);
+                CamProcess.colori(estados, eSuperiorEsquerdo, Control.getSuperiorEsquerdoLabel(), margem);
+                CamProcess.colori(estados, eSuperiorDireito, Control.getSuperiorDireitoLabel(), margem);
+                CamProcess.colori(estados, eInferiorEsquerdo, Control.getInferiorEsquerdoLabel(), margem);
+                CamProcess.colori(estados, eInferiorDireito, Control.getInferiorDireitoLabel(), margem);
+            }
         }
 
-        Control.getDescricao().innerHTML = angulo.toString();
-
     };
+
+    static colori = (estados, Elemento, Label, margem) => {
+        if (
+            ((estados.x1 > Elemento.x1-margem) && (estados.x1 < Elemento.x1+margem)) &&
+            ((estados.x2 > Elemento.x2-margem) && (estados.x2 < Elemento.x2+margem)) &&
+            ((estados.y1 > Elemento.y1-margem) && (estados.y1 < Elemento.y1+margem)) &&
+            ((estados.y2 > Elemento.y2-margem) && (estados.y2 < Elemento.y2+margem)) &&
+            ((estados.angulo > Elemento.angulo-(margem/100)) && (estados.angulo < Elemento.angulo+(margem/100)))
+        ) {
+            Label.style = "color: red;"
+        } else {
+            Label.style = "color: black;"
+        }
+    }
+
+    static descreve = (comp, text, time) => {
+        return new Promise((resolve,reject) => {
+            setTimeout(() => {
+                comp.innerHTML = text;
+                resolve();
+            }, time);
+        })
+    }
+
+    static calibrando = async () => {
+        await CamProcess.descreve(Control.getDescricao(),"Calibrando posições", 3000);
+        
+        Control.getCentroLabel().style = "visible: visible;";
+        Control.getCentro().style = "visible: visible;";
+        await CamProcess.descreve(Control.getDescricao(),"Mantenha sua vara apontada para o centro do monitor!", 3000);
+        await CamProcess.descreve(Control.getCentro(),Control.getEstados().innerHTML, 100);
+
+        Control.getSuperiorEsquerdoLabel().style = "visible: visible;";
+        Control.getSuperiorEsquerdo().style = "visible: visible;";
+        await CamProcess.descreve(Control.getDescricao(),"Mantenha sua vara apontada para o canto superior esquerdo do monitor!", 3000);
+        await CamProcess.descreve(Control.getSuperiorEsquerdo(),Control.getEstados().innerHTML, 100);
+
+        Control.getSuperiorDireitoLabel().style = "visible: visible;";
+        Control.getSuperiorDireito().style = "visible: visible;";
+        await CamProcess.descreve(Control.getDescricao(),"Mantenha sua vara apontada para o canto superior direito do monitor!", 3000);
+        await CamProcess.descreve(Control.getSuperiorDireito(),Control.getEstados().innerHTML, 100);
+
+        Control.getInferiorEsquerdoLabel().style = "visible: visible;";
+        Control.getInferiorEsquerdo().style = "visible: visible;";
+        await CamProcess.descreve(Control.getDescricao(),"Mantenha sua vara apontada para o canto inferior esquerdo do monitor!", 3000);
+        await CamProcess.descreve(Control.getInferiorEsquerdo(),Control.getEstados().innerHTML, 100);
+
+        Control.getInferiorDireitoLabel().style = "visible: visible;";
+        Control.getInferiorDireito().style = "visible: visible;";
+        await CamProcess.descreve(Control.getDescricao(),"Mantenha sua vara apontada para o canto inferior direito do monitor!", 3000);
+        await CamProcess.descreve(Control.getInferiorDireito(),Control.getEstados().innerHTML, 100);
+
+        await CamProcess.descreve(Control.getDescricao(),"", 100);
+        
+    }
 
     static deixaBranco = (imgData) => {
         var min = 128;
